@@ -105,7 +105,7 @@ After that it should be responsive.
 
 ## Define and create a contract
 
-The fastest way to showcase the API-first principle during this demo is to create a new git repository which will contain all of our contracts which we agreed upon.
+The fastest way to showcase the API-first principle during this workshop is to create a new git repository which will contain all of our contracts which we agreed upon.
 
 ```bash
 $ cd demo
@@ -373,14 +373,11 @@ public class BaseTestClass {
 }
 ```
 
-Add the following snippet to your `pom.xml` file and rerun your build.
+Update the configuration of the `spring-cloud-contract-maven-plugin` in your `pom.xml` file and rerun your build.
 
 ```xml
 <plugin>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-    <version>2.2.3.RELEASE</version>
-    <extensions>true</extensions>
+    ...
     <configuration>
         <testFramework>JUNIT5</testFramework>
 
