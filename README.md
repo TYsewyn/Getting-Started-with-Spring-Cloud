@@ -6,11 +6,11 @@ Workshop Materials: [insert link]
 
 Tim Ysewyn, Solutions Architect, VMware
 
-## What you will do
+## What You Will Do
 
 - Define a contract between two applications
-- Create a basic Spring Boot app
-- Deploy and run the app on Kubernetes
+- Create a basic Spring Boot application
+- Deploy and run the application on Kubernetes
 - Configure an API gateway
 - Make your application more resilient
 
@@ -19,36 +19,36 @@ Everyone will need:
 
 - Basic knowledge of Spring and Kubernetes (we will not be giving an introduction to either)
 
-If you are following these notes from an event all the pre-requisites will be provided in the Lab. You only need to worry about these if you are going to work through the lab on your own.
+If you are following these notes from an event, all the pre-requisites will be provided in the Lab. You only need to worry about these if you are going to work through the lab on your own.
 
-- [JDK 8 or higher](https://openjdk.java.net/install/index.html)
-    - **Please ensure you have a JDK installed and not just a JRE**
-- [Docker](https://docs.docker.com/install/) installed
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed
-- [yq](https://mikefarah.gitbook.io/yq/)
-- [Spring Boot CLI](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-installing-the-cli) and [Spring Cloud CLI](https://cloud.spring.io/spring-cloud-cli/reference/html/#_installation)
+- [JDK 8 or higher](https://openjdk.java.net/install/index.html) installed. **Ensure you have a JDK installed and not just a JRE**
+- [Docker](https://docs.docker.com/install/) installed.
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed.
+- [yq](https://mikefarah.gitbook.io/yq/) installed.
+- [Spring Boot CLI](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-installing-the-cli) and [Spring Cloud CLI](https://cloud.spring.io/spring-cloud-cli/reference/html/#_installation) installed.
     - **Optional** - these will be used to showcase a feature in one of the Spring Cloud projects during this workshop.
+> COMMENT: At present, you have no items in this nested list. Either add items or remove the list.
 
-### Doing the workshop on your own
+### Doing the Workshop on Your Own
 
-- If you are doing this workshop on your own you will need to have your own Kubernetes cluster and Docker repo that the cluster can access
-    - **Docker Desktop and Docker Hub** - Docker Desktop allows you to easily setup a local Kubernetes cluster ([Mac](https://docs.docker.com/docker-for-mac/#kubernetes), [Windows](https://docs.docker.com/docker-for-windows/#kubernetes)).
-    This in combination with [Docker Hub](https://hub.docker.com/) should allow you to easily run through this workshop.
-    - **Hosted Kubernetes Clusters and Repos** - Various cloud providers such as Google and Amazon offer options for running Kubernetes clusters and repos in the cloud.
-    You will need to follow instructions from the cloud provider to provision the cluster and repo as well configuring `kubectl` to work with these clusters.
+- If you are doing this workshop on your own, you will need to have your own Kubernetes cluster and Docker repo that the cluster can access:
+    - **Docker Desktop and Docker Hub** - Docker Desktop lets you easily setup a local Kubernetes cluster ([Mac](https://docs.docker.com/docker-for-mac/#kubernetes), [Windows](https://docs.docker.com/docker-for-windows/#kubernetes)).
+    This, in combination with [Docker Hub](https://hub.docker.com/), should let you run through this workshop.
+    - **Hosted Kubernetes Clusters and Repos** - Various cloud providers, such as Google and Amazon, offer options for running Kubernetes clusters and repositories in the cloud.
+    You will need to follow instructions from the cloud provider to provision the cluster and repository as well as for configuring `kubectl` to work with the cluster.
 
 ### Doing The Workshop in Strigo
 
-- Login To Strigo.
+1. Login To Strigo.
 
-- Configuring `git`. Run this command in the terminal:
+1. Configure `git`. Run this command in the terminal:
 
 ```bash
 $ git config --global user.name "<name>"
 $ git config --global user.email "<email>"
 ```
 
-- Configuring `kubectl`. Run this command in the terminal:
+3. To configure `kubectl`, run the following command in the terminal:
 
 ```bash
 $ kind-setup
@@ -56,7 +56,7 @@ Cluster already active: kind
 Setting up kubeconfig
 ```
 
-- Run the below command to verify kubectl is configured correctly
+4. Verify kubectl is configured correctly
 
 ```bash
 $ kubectl cluster-info
@@ -66,28 +66,28 @@ KubeDNS is running at https://127.0.0.1:43723/api/v1/namespaces/kube-system/serv
 
 To further debug and diagnose cluster problems, use `'kubectl cluster-info dump'`.
 
-> NOTE: it might take a minute or so after the VM launches to get the Kubernetes API server up and running, so your first few attempts at using kubectl may be very slow or fail.
+> NOTE: It might take a minute or so after the VM launches to get the Kubernetes API server up and running, so your first few attempts at using kubectl may be very slow or fail.
 After that it should be responsive.
 
 ### Setting up the environment
 
-- Installing Kubernetes [Operator Lifecycle Manager](https://github.com/operator-framework/operator-lifecycle-manager)
-    
+1. Installing Kubernetes [Operator Lifecycle Manager](https://github.com/operator-framework/operator-lifecycle-manager)
+
     `curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/0.15.1/install.sh | bash -s 0.15.1`
     
         NOTE: Please check [the OLM releases](https://github.com/operator-framework/operator-lifecycle-manager/releases) to install the latest version.
 
-- Kubernetes Operators (assuming your K8s cluster has internet access)
+2. Kubernetes Operators (assuming your K8s cluster has internet access)
 
-    - Prometheus Operator
+    1. Prometheus Operator
 
         `kubectl create -f https://operatorhub.io/install/prometheus.yaml`
 
-    - Grafana Operator (assuming internet access)
+    1. Grafana Operator (assuming internet access)
 
         `kubectl create -f https://operatorhub.io/install/alpha/grafana-operator.yaml`
 
-    - Redis Operator (assuming internet access)
+    1. Redis Operator (assuming internet access)
 
         `kubectl create -f https://operatorhub.io/install/redis-operator.yaml`
 
@@ -103,27 +103,27 @@ After that it should be responsive.
 
     `kubectl create -f [link to yaml]`
 
-## Define and create a contract
+## Define and Create a Contract
 
-The fastest way to showcase the API-first principle during this workshop is to create a new git repository which will contain all of our contracts which we agreed upon.
+The fastest way to showcase the API-first principle during this workshop is to create a new git repository to contain all of the contracts we agreed upon:
 
 ```bash
 $ cd demo
 $ mkdir contracts && cd contracts && git init
 ```
 
-To define our contracts we'll use our first Spring Cloud project.
-You might have guessed it, it's called `Spring Cloud Contract`.
-Because the project is assuming a specific directory structure, we'll create this first.
-The convention is like this: `META-INF/[groupId]/[artifactId]/[version]/contracts`.
+To define our contracts, we will use our first Spring Cloud project.
+You might have guessed it: It is called `Spring Cloud Contract`.
+Because the project is assuming a specific directory structure, we will create this first.
+The convention is: `META-INF/[groupId]/[artifactId]/[version]/contracts`.
 
-Since the application we're going to create later will have a group id of `com.example`, an artifact id of `s1p-spring-cloud-demo-app` and `0.0.1-SNAPSHOT` as its version we'll have to execute the following command.
+Since the application we are going to create later will have a group ID of `com.example`, an artifact ID of `s1p-spring-cloud-demo-app`, and `0.0.1-SNAPSHOT` as its version, we will have to execute the following command:
 
 ```bash
 $ mkdir -p META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts
 ```
 
-And so you should see the exact same output if you execute this command:
+You should see the exact same output if you run this command:
 
 ```bash
 $ tree .
@@ -135,9 +135,9 @@ $ tree .
                 └── contracts
 ```
 
-Next we'll define our two contracts under the newly created directory.
+Next, we will define our two contracts under the newly created directory.
 
-META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/getAllShopItems.groovy
+`META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/getAllShopItems.groovy`
 
 ```groovy
 package contracts
@@ -181,7 +181,7 @@ org.springframework.cloud.contract.spec.Contract.make {
 }
 ```
 
-META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/placeOrder.groovy
+`META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/placeOrder.groovy`
 
 ```groovy
 package contracts
@@ -220,7 +220,7 @@ org.springframework.cloud.contract.spec.Contract.make {
 }
 ```
 
-And as a last step we'll commit our changes and push them to a remote
+Finally, we will commit our changes and push them to a remote repository:
 
 ```bash
 $ git add .
@@ -229,16 +229,16 @@ $ git remote add origin <origin>
 $ git push -u origin master
 ```
 
-### Using the contract as stubs
+### Using the Contract as Stubs
 
-> NOTE: This can't be done on the VM in the lab setting because of how the VM has been configured.
-However you can install the `Spring Boot CLI` and `Spring Cloud CLI` on your local machine and give it a try!
+> NOTE: This cannot be done on the VM in the lab setting because of how the VM has been configured.
+However, you can install the `Spring Boot CLI` and `Spring Cloud CLI` on your local machine and give it a try!
 
-From this point on our consumer can continue developing without any changes we need to make to our application.
+From this point on, our consumer can continue developing without any changes to our application.
 Our defined contracts will be converted into stubs by the `Spring Cloud Contract Stubrunner`.
-To let you see how this works we'll need to create a new file and use the second Spring Cloud project, `Spring Cloud CLI`.
+To let you see how this works, we will need to create a new file and use the second Spring Cloud project, `Spring Cloud CLI`.
 
-Let's create a new file `stubrunner.yml`
+Let's create a new file `stubrunner.yml`:
 
 ```yaml
 stubrunner:
@@ -249,20 +249,20 @@ stubrunner:
   stubs-mode: REMOTE
 ```
 
-After creating the file run the following command in your terminal from the same directory where your `stubrunner.yml` file is located:
+After creating the file, run the following command in your terminal from the same directory where your `stubrunner.yml` file is located:
 
 ```bash
 $ spring cloud stubrunner
 ```
 
-If you visit `http://localhost:8750/stubs` you will find a list of all configured stubs.
+If you visit `http://localhost:8750/stubs`, you will find a list of all configured stubs:
 ```json
 {
 "com.example:s1p-spring-cloud-demo-app:+:stubs": 9876
 }
 ```
 
-Since we specified that our stubs need to be served on port `9876`, let's try to get our items.
+Since we specified that our stubs need to be served on port `9876`, we can try to get our items:
 
 ```bash
 $ http GET http://localhost:9876/shop/items content-type:application/json
@@ -298,7 +298,7 @@ Vary: Accept-Encoding, User-Agent
 }
 ```
 
-If we would visit the same link using our browser we get the following response:
+If we visit the same link in our browser, we get the following response:
 
 ```
 
@@ -319,27 +319,27 @@ Content-Type [matches] : application/json.*                |                    
 ```
 
 
-## Create an app
+## Create an Application
 
 In the Lab:
 
-- Run these commands in your terminal (please copy them verbatim to make the rest of the lab run smoothly)
+1. Run the following commands in your terminal (copy them verbatim to make the rest of the lab run smoothly):
 
 ```bash
 $ cd ~/demo && mkdir s1p-spring-cloud-demo-app && cd s1p-spring-cloud-demo-app
 $ curl https://start.spring.io/starter.tgz -d artifactId=s1p-spring-cloud-demo-app -d name=s1p-spring-cloud-demo-app -d packageName=com.example.demo -d dependencies=web,actuator,cloud-contract-verifier -d javaVersion=11 | tar -xzf -
 ```
 
-- Open the IDE using the “IDE” button at the top of the lab - it might be obscured by the “Call for Assistance” button.
+2. Open the IDE using the “IDE” button at the top of the lab - it might be obscured by the “Call for Assistance” button.
 
 Working on your own:
 
-- Click [here](https://start.spring.io/starter.zip?type=maven-project&language=java&platformVersion=2.3.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=s1p-spring-cloud-demo-app&name=s1p-spring-cloud-demo-app&description=Getting%20started%20with%20Spring%20Cloud&packageName=com.example.demo&dependencies=web,actuator,cloud-contract-verifier) to download a zip of the Spring Boot app
-- Unzip the project to your desired workspace and open in your favorite IDE
+1. Click [here](https://start.spring.io/starter.zip?type=maven-project&language=java&platformVersion=2.3.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=s1p-spring-cloud-demo-app&name=s1p-spring-cloud-demo-app&description=Getting%20started%20with%20Spring%20Cloud&packageName=com.example.demo&dependencies=web,actuator,cloud-contract-verifier) to download a zip of the Spring Boot app
+1. Unzip the project to your desired workspace and open in your favorite IDE
 
-### Implementing and verifying our API
+### Implementing and Verifying Our API
 
-If we would build and test our newly created application everything should be fine.
+If we build and test our newly created application, everything should be fine:
 
 ```bash
 $ ./mvnw clean verify
@@ -352,10 +352,10 @@ $ ./mvnw clean verify
 [INFO] ------------------------------------------------------------------------
 ```
 
-To validate our contracts against our new app we'll need to make some changes.
-First we'll need to make a base class which will be used as the parent class for our generated tests.
+To validate our contracts against our new application, we will need to make some changes.
+First, we will need to make a base class, which will be used as the parent class for our generated tests:
 
-Let's add a `BaseTestClass.java` under `src/test/java/com/example/demo`
+We can add a `BaseTestClass.java` under `src/test/java/com/example/demo`
 
 ```java
 package com.example.demo;
@@ -373,7 +373,7 @@ public class BaseTestClass {
 }
 ```
 
-Update the configuration of the `spring-cloud-contract-maven-plugin` in your `pom.xml` file and rerun your build.
+Update the configuration of the `spring-cloud-contract-maven-plugin` in your `pom.xml` file and rerun your build:
 
 ```xml
 <plugin>
@@ -401,7 +401,7 @@ Update the configuration of the `spring-cloud-contract-maven-plugin` in your `po
 </plugin>
 ```
 
-After rerunning your build you should see an output similar to this one:
+After re-running your build, you should see an output similar to this one:
 
 ```bash
 [ERROR] Failures: 
@@ -421,57 +421,57 @@ but was not.
 [ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
 ```
 
-## Build and run the app
+## Build and Run the Application
 
 > NOTE: Use Spring Boot 2.3 CNB feature, push to Docker Hub and deploy to K8s using Kustomize
 
 
-## Create an API gateway
+## Create an API Gateway
 
 > NOTE: define route using K8s DNS
 
 
-## Make your application more resilient
+## Make Your Application More Resilient
 
-### Rate limiting
+### Rate Limiting
 
-Let's say this is the first version of our API which doesn't have authentication or authorization.
+Suppose this is the first version of our API and that it doesn't have authentication or authorization.
 Along comes this hacker who wants to hurt us by sending a huge amount of requests to our application.
-One of the first things we can do is to add a rate limiter to our API gateway so the requests of the hacker are not being sent to our application anymore.
+One of the first things we can do is to add a rate limiter to our API gateway so that the requests of the hacker are not being sent to our application anymore.
 
-> NOTE: based on the originating IP address
+> NOTE: Rate limiting is based on the originating IP address
 
 ### Circuit breaker
 
 TODO
 
-- Add dependencies
-- Configure initial setup
-- Run test script
+1. Add dependencies
+1. Configure initial setup
+1. Run test script
 
 Now let's scale our application and try to see if we can still open our circuit.
 
 TODO
 
-- Scale deployment to 2 instances
-- Configure one instance to behave inconsistently using actuator endpoint
-- Run test script again
+1. Scale deployment to 2 instances
+1. Configure one instance to behave inconsistently using actuator endpoint
+1. Run test script again
 
-As you can see the circuit breaker won't go in an open state as long as there is one instance which can successfully process the request.
-But this means all of our requests can still be routed to any failing instance!
+The circuit breaker will not go into an open state as long as there is one instance that can successfully process the request.
+This means all of our requests can still be routed to any failing instance!
 Why is that?
-Our gateway doesn't have the ability to recognize the different instances and their individual state because we're using the load balancer behind the DNS on Kubernetes to route our request to one of our application instances.
+Our gateway does not have the ability to recognize the different instances and their individual state because we are using the load balancer behind the DNS on Kubernetes to route our request to one of our application instances.
 
 ### Load Balancing
 
-In order to send our requests only to a healthy instance we can make use of client-side load balancing, meaning our gateway will decide which instance we're going to target.
+To send our requests only to a healthy instance, we can make use of client-side load balancing, meaning our gateway will decide which instance to target.
 
 TODO
 
-- Add/enable service discovery dependency
-- Use `HealthCheckServiceInstanceListSupplier`
-- Adapt the route
-- Run test script a third time
+1. Add/enable service discovery dependency
+1. Use `HealthCheckServiceInstanceListSupplier`
+1. Adapt the route
+1. Run test script a third time
 
 
 ## Follow-up resources
