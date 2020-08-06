@@ -142,7 +142,9 @@ Next, we will define our two contracts under the newly created directory.
 ```groovy
 package contracts
 
-org.springframework.cloud.contract.spec.Contract.make {
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
     request {
         method 'GET'
         url '/shop/items'
@@ -156,29 +158,34 @@ org.springframework.cloud.contract.spec.Contract.make {
             contentType('application/json')
         }
         body([
-            "pulled-pork": [
+            [
+                "id": "pulled-pork",
                 "name": "Pulled pork",
                 "img": "link",
                 "price": 26,
             ],
-            "brisket": [
+            [
+                "id": "brisket",
                 "name": "Brisket",
                 "img": "link",
                 "price": 22,
             ],
-            "ribs": [
+            [
+                "id": "ribs",
                 "name": "Pork Ribs",
                 "img": "link",
                 "price": 20,
             ],
-            "burnt-ends": [
+            [
+                "id": "burnt-ends",
                 "name": "Pork Belly Burnt Ends",
                 "img": "link",
-                "price": 23,
+                "price": 16,
             ],
         ])
     }
 }
+
 ```
 
 `META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/placeOrder.groovy`
@@ -186,7 +193,9 @@ org.springframework.cloud.contract.spec.Contract.make {
 ```groovy
 package contracts
 
-org.springframework.cloud.contract.spec.Contract.make {
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
     request {
         method 'POST'
         url '/shop/orders'
@@ -212,12 +221,10 @@ org.springframework.cloud.contract.spec.Contract.make {
         ])
     }
     response {
-        status OK()
-        headers {
-            contentType('application/json')
-        }
+        status CREATED()
     }
 }
+
 ```
 
 Finally, we will commit our changes and push them to a remote repository:
@@ -269,33 +276,37 @@ $ http GET http://localhost:9876/shop/items content-type:application/json
 HTTP/1.1 200 OK
 Content-Encoding: gzip
 Content-Type: application/json
-Matched-Stub-Id: e2fc25be-3cd4-4117-9327-a23f44c25d54
+Matched-Stub-Id: fe6d6b29-59f9-4c42-9afb-4630a3d6996c
 Server: Jetty(9.4.20.v20190813)
 Transfer-Encoding: chunked
 Vary: Accept-Encoding, User-Agent
 
-{
-    "brisket": {
-        "img": "link",
-        "name": "Brisket",
-        "price": 22
-    },
-    "burnt-ends": {
-        "img": "link",
-        "name": "Pork Belly Burnt Ends",
-        "price": 23
-    },
-    "pulled-pork": {
+[
+    {
+        "id": "pulled-pork",
         "img": "link",
         "name": "Pulled pork",
         "price": 26
     },
-    "ribs": {
+    {
+        "id": "brisket",
+        "img": "link",
+        "name": "Brisket",
+        "price": 22
+    },
+    {
+        "id": "ribs",
         "img": "link",
         "name": "Pork Ribs",
         "price": 20
+    },
+    {
+        "id": "burnt-ends",
+        "img": "link",
+        "name": "Pork Belly Burnt Ends",
+        "price": 16
     }
-}
+]
 ```
 
 If we visit the same link in our browser, we get the following response:
@@ -337,7 +348,7 @@ Working on your own:
 1. Click [here](https://start.spring.io/starter.zip?type=maven-project&language=java&platformVersion=2.3.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=s1p-spring-cloud-demo-app&name=s1p-spring-cloud-demo-app&description=Getting%20started%20with%20Spring%20Cloud&packageName=com.example.demo&dependencies=web,actuator,cloud-contract-verifier) to download a zip of the Spring Boot app
 1. Unzip the project to your desired workspace and open in your favorite IDE
 
-### Implementing and Verifying Our API
+### Configuring Our Contract Tests
 
 If we build and test our newly created application, everything should be fine:
 
@@ -347,9 +358,7 @@ $ ./mvnw clean verify
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  16.974 s
-[INFO] Finished at: 2020-08-05T14:38:04Z
-[INFO] ------------------------------------------------------------------------
+...
 ```
 
 To validate our contracts against our new application, we will need to make some changes.
@@ -373,7 +382,7 @@ public class BaseTestClass {
 }
 ```
 
-Update the configuration of the `spring-cloud-contract-maven-plugin` in your `pom.xml` file and rerun your build:
+Update the configuration of the `spring-cloud-contract-maven-plugin` plugin in your `pom.xml` file and rerun your build:
 
 ```xml
 <plugin>
@@ -419,6 +428,61 @@ to be equal to:
 but was not.
 [INFO] 
 [ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+```
+
+### Implementing and verifying our API
+
+Okay! Now we're sure that we're verifying our API it's time to fix our failing tests.
+As a first iteration we'll create a `ShopController` which will react and respond to the requests our generated test will execute.
+
+Add `ShopController.java` to `src/main/java/com/example/demo`
+
+```java
+package com.example.demo;
+
+import java.net.URI;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/shop")
+public class ShopController {
+
+    @GetMapping(value = "/items", consumes = { "application/json" }, produces = { "application/json" })
+    public ResponseEntity retrieveAllItems() {
+        return ResponseEntity.ok().body("[{\"id\": \"pulled-pork\",\"img\": \"link\",\"name\": \"Pulled pork\",\"price\": 26},{\"id\": \"brisket\",\"img\": \"link\",\"name\": \"Brisket\",\"price\": 22},{\"id\": \"ribs\",\"img\": \"link\",\"name\": \"Pork Ribs\",\"price\": 20},{\"id\": \"burnt-ends\",\"img\": \"link\",\"name\": \"Pork Belly Burnt Ends\",\"price\": 16}]");
+    }
+
+    @PostMapping(value = "/orders", consumes = { "application/json" }, produces = { "application/json" })
+    public ResponseEntity placeOrder() {
+        return ResponseEntity.created(URI.create("/shop/orders/" + UUID.randomUUID())).build();
+    }
+    
+}
+```
+
+And adjust `BaseTestClass.java`
+
+```java
+...
+RestAssuredMockMvc.standaloneSetup(new ShopController());
+...
+```
+
+If we run our build again we should see that our application is adhering to the contracts.
+
+```bash
+$ ./mvnw clean verify
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+...
 ```
 
 ## Build and Run the Application
