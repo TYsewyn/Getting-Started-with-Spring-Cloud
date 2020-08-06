@@ -142,7 +142,9 @@ META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/getAllSh
 ```groovy
 package contracts
 
-org.springframework.cloud.contract.spec.Contract.make {
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
     request {
         method 'GET'
         url '/shop/items'
@@ -156,29 +158,34 @@ org.springframework.cloud.contract.spec.Contract.make {
             contentType('application/json')
         }
         body([
-            "pulled-pork": [
+            [
+                "id": "pulled-pork",
                 "name": "Pulled pork",
                 "img": "link",
                 "price": 26,
             ],
-            "brisket": [
+            [
+                "id": "brisket",
                 "name": "Brisket",
                 "img": "link",
                 "price": 22,
             ],
-            "ribs": [
+            [
+                "id": "ribs",
                 "name": "Pork Ribs",
                 "img": "link",
                 "price": 20,
             ],
-            "burnt-ends": [
+            [
+                "id": "burnt-ends",
                 "name": "Pork Belly Burnt Ends",
                 "img": "link",
-                "price": 23,
+                "price": 16,
             ],
         ])
     }
 }
+
 ```
 
 META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/placeOrder.groovy
@@ -186,7 +193,9 @@ META-INF/com.example/s1p-spring-cloud-demo-app/0.0.1-SNAPSHOT/contracts/placeOrd
 ```groovy
 package contracts
 
-org.springframework.cloud.contract.spec.Contract.make {
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
     request {
         method 'POST'
         url '/shop/orders'
@@ -218,6 +227,7 @@ org.springframework.cloud.contract.spec.Contract.make {
         }
     }
 }
+
 ```
 
 And as a last step we'll commit our changes and push them to a remote
@@ -269,33 +279,37 @@ $ http GET http://localhost:9876/shop/items content-type:application/json
 HTTP/1.1 200 OK
 Content-Encoding: gzip
 Content-Type: application/json
-Matched-Stub-Id: e2fc25be-3cd4-4117-9327-a23f44c25d54
+Matched-Stub-Id: fe6d6b29-59f9-4c42-9afb-4630a3d6996c
 Server: Jetty(9.4.20.v20190813)
 Transfer-Encoding: chunked
 Vary: Accept-Encoding, User-Agent
 
-{
-    "brisket": {
-        "img": "link",
-        "name": "Brisket",
-        "price": 22
-    },
-    "burnt-ends": {
-        "img": "link",
-        "name": "Pork Belly Burnt Ends",
-        "price": 23
-    },
-    "pulled-pork": {
+[
+    {
+        "id": "pulled-pork",
         "img": "link",
         "name": "Pulled pork",
         "price": 26
     },
-    "ribs": {
+    {
+        "id": "brisket",
+        "img": "link",
+        "name": "Brisket",
+        "price": 22
+    },
+    {
+        "id": "ribs",
         "img": "link",
         "name": "Pork Ribs",
         "price": 20
+    },
+    {
+        "id": "burnt-ends",
+        "img": "link",
+        "name": "Pork Belly Burnt Ends",
+        "price": 16
     }
-}
+]
 ```
 
 If we would visit the same link using our browser we get the following response:
@@ -337,7 +351,7 @@ Working on your own:
 - Click [here](https://start.spring.io/starter.zip?type=maven-project&language=java&platformVersion=2.3.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=s1p-spring-cloud-demo-app&name=s1p-spring-cloud-demo-app&description=Getting%20started%20with%20Spring%20Cloud&packageName=com.example.demo&dependencies=web,actuator,cloud-contract-verifier) to download a zip of the Spring Boot app
 - Unzip the project to your desired workspace and open in your favorite IDE
 
-### Implementing and verifying our API
+### Configuring our contract tests
 
 If we would build and test our newly created application everything should be fine.
 
@@ -373,7 +387,7 @@ public class BaseTestClass {
 }
 ```
 
-Update the configuration of the `spring-cloud-contract-maven-plugin` in your `pom.xml` file and rerun your build.
+Update the configuration of the `spring-cloud-contract-maven-plugin` plugin in your `pom.xml` file and rerun your build.
 
 ```xml
 <plugin>
