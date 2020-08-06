@@ -358,9 +358,7 @@ $ ./mvnw clean verify
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  16.974 s
-[INFO] Finished at: 2020-08-05T14:38:04Z
-[INFO] ------------------------------------------------------------------------
+...
 ```
 
 To validate our contracts against our new app we'll need to make some changes.
@@ -430,6 +428,61 @@ to be equal to:
 but was not.
 [INFO] 
 [ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+```
+
+### Implementing and verifying our API
+
+Okay! Now we're sure that we're verifying our API it's time to fix our failing tests.
+As a first iteration we'll create a `ShopController` which will react and respond to the requests our generated test will execute.
+
+Add `ShopController.java` to `src/main/java/com/example/demo`
+
+```java
+package com.example.demo;
+
+import java.net.URI;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/shop")
+public class ShopController {
+
+    @GetMapping(value = "/items", consumes = { "application/json" }, produces = { "application/json" })
+    public ResponseEntity retrieveAllItems() {
+        return ResponseEntity.ok().body("[{\"id\": \"pulled-pork\",\"img\": \"link\",\"name\": \"Pulled pork\",\"price\": 26},{\"id\": \"brisket\",\"img\": \"link\",\"name\": \"Brisket\",\"price\": 22},{\"id\": \"ribs\",\"img\": \"link\",\"name\": \"Pork Ribs\",\"price\": 20},{\"id\": \"burnt-ends\",\"img\": \"link\",\"name\": \"Pork Belly Burnt Ends\",\"price\": 16}]");
+    }
+
+    @PostMapping(value = "/orders", consumes = { "application/json" }, produces = { "application/json" })
+    public ResponseEntity placeOrder() {
+        return ResponseEntity.created(URI.create("/shop/orders/" + UUID.randomUUID())).build();
+    }
+    
+}
+```
+
+And adjust `BaseTestClass.java`
+
+```java
+...
+RestAssuredMockMvc.standaloneSetup(new ShopController());
+...
+```
+
+If we run our build again we should see that our application is adhering to the contracts.
+
+```bash
+$ ./mvnw clean verify
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+...
 ```
 
 ## Build and run the app
