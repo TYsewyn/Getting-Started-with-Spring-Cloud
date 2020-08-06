@@ -221,10 +221,7 @@ Contract.make {
         ])
     }
     response {
-        status OK()
-        headers {
-            contentType('application/json')
-        }
+        status CREATED()
     }
 }
 
