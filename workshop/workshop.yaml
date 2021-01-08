@@ -4,3 +4,4 @@ modules:
     activate:
         - workshop-overview
         - setup-environment
+        - exercises/01-creating-our-product

@@ -4,4 +4,7 @@ modules:
     exit_sign: Setup Environment
   setup-environment:
     name: Setup Environment
+    exit_sign: Start Workshop
+  exercises/01-creating-our-product:
+    name: Creating our Product
     exit_sign: Finish Workshop
