@@ -1,4 +1,7 @@
 modules:
   workshop-overview:
     name: Workshop Overview
+    exit_sign: Setup Environment
+  setup-environment:
+    name: Setup Environment
     exit_sign: Finish Workshop

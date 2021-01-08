@@ -3,3 +3,4 @@ name: Getting Started with Spring Cloud
 modules:
     activate:
         - workshop-overview
+        - setup-environment
