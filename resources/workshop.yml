@@ -1,0 +1,31 @@
+apiVersion: training.eduk8s.io/v1alpha2
+kind: Workshop
+metadata:
+  name: lab-spring-cloud-gs
+spec:
+  vendor: eduk8s.io
+  title: Getting Started with Spring Cloud
+  description: In this workshop, we’ll teach you how to create a cloud native application using an API-first approach. We’ll also use an API gateway to easily direct our traffic to one of our application instances. We’ll also implement an application architecture that boosts resiliency in the face of unforeseen changes. By the end of this workshop, you’ll have a starting point that you can use for your next application!
+  url: https://github.com/TYsewyn/Getting-Started-with-Spring-Cloud
+  duration: 60m
+  content: 
+    image: jdk11-environment:*
+    files: github.com/TYsewyn/Getting-Started-with-Spring-Cloud
+  session:
+    namespaces:
+      budget: large
+    resources:
+      memory: 2Gi
+    applications:
+      terminal:
+        enabled: true
+        layout: split
+      console:
+        enabled: true
+        vendor: octant
+      editor:
+        enabled: true
+      registry:
+        enabled: true
+      docker:
+        enabled: true

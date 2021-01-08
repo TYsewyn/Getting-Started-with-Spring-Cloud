@@ -1,0 +1,7 @@
+.git
+.gitkeep
+resources
+README.md
+Dockerfile
+LICENSE
+kustomization.yaml

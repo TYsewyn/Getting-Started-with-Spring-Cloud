@@ -1,0 +1,11 @@
+apiVersion: training.eduk8s.io/v1alpha1
+kind: TrainingPortal
+metadata:
+  name: lab-spring-cloud-gs
+spec:
+  workshops:
+    - name: lab-spring-cloud-gs
+      reserved: 0
+      capacity: 1
+      expires: 60m
+      orphaned: 5m
