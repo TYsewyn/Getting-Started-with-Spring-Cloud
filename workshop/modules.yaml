@@ -1,4 +1,4 @@
-imodules:
+modules:
   workshop-overview:
     name: Workshop Overview
     exit_sign: Finish Workshop
