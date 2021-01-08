@@ -25,5 +25,5 @@ tree demo/shop
 To verify that the application code has been generated successfully, open up the main Java source code file for the application.
 
 ```editor:open-file
-file: ~/exercises/demo/shop/src/main/java/com/example/demo/shop/ShopApplication.java
+file: ~/demo/shop/src/main/java/com/example/demo/shop/ShopApplication.java
 ```
