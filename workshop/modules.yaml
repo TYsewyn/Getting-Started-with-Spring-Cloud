@@ -13,4 +13,10 @@ modules:
     name: Setting Up Our API Tests
   exercises/04-implementing-our-api:
     name: Implementing Our API
+  exercises/05-building-our-shop:
+    name: Building Our Shop
+  exercises/06-containerizing-our-shop:
+    name: Containerizing Our Shop
+  exercises/07-deploying-our-shop:
+    name: Deploying Our Shop
     exit_sign: Finish Workshop

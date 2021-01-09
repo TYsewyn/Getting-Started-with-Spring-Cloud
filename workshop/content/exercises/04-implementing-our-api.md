@@ -64,12 +64,10 @@ Before we run our tests we need to update the `BaseTestClass` so that both `Rest
 ```editor:select-matching-text
 file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
 text: "RestAssuredMockMvc.standaloneSetup();"
-before: 0
-after: 0
 ```
 
 Replace the highlighted line with the following statement:
-```java
+```copy
 RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
 ```
 

@@ -1,0 +1,105 @@
+Before we can deploy the container image to Kubernetes, it needs to be made available via an image registry from which Kubernetes can pull the image when deploying it.
+
+This workshop environment provides you with your own image registry located at `{{ registry_host }}` and the user your workshop environment runs as has already been authenticated against the image registry.
+
+As the container image when built was tagged with the image registry name, we need only push the image to the registry.
+
+```execute
+docker push {{ registry_host }}/springguides/shop
+```
+
+We now need a Kubernetes cluster. In this workshop environment we have already taken care of that for you. The workshop is running in a Kubernetes cluster and you have access to your own namespace in the same cluster.
+
+To check that you can access the Kubernetes cluster okay, run:
+
+```execute
+kubectl version
+```
+
+The output should be similar to the following, although the version of Kubernetes may differ.
+
+```
+Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:41:02Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.0", GitCommit:"af46c47ce925f4c4ad5cc8d1fca46c7b77d13b38", GitTreeState:"clean", BuildDate:"2020-12-08T17:51:19Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"}
+```
+
+To deploy our container image, now run:
+
+```execute
+kubectl create deployment shop --image={{ registry_host }}/springguides/shop
+```
+
+The output should be:
+
+```
+deployment.apps/shop created
+```
+
+> NOTE: The deployment will use the `default` service account, which already has the image pull secret for the image registry associated with it, so we did not need to provide the pull secret in the deployment.
+
+To monitor the deployment, run:
+
+```execute
+kubectl rollout status deployment/shop
+```
+
+To see all the resources which were created, run:
+
+```execute
+kubectl get all
+```
+
+The output should be similar to:
+
+```
+NAME                        READY   STATUS        RESTARTS   AGE
+pod/shop-67948799b4-kxp7w   1/1     Running       0          1m
+
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/shop   1/1     1            1           1m
+
+NAME                              DESIRED   CURRENT   READY   AGE
+replicaset.apps/shop-67948799b4   1         1         1       1m
+```
+
+To test that the deployment is working, we need to be able to connect to the application. Normally you would have created a service for the application, as well as exposed it outside of the cluster using an ingress or via a load balancer. Since we haven't done that, we will set up port forwarding to expose the application to the local environment.
+
+```execute
+kubectl port-forward deployment/shop 8080:8080
+```
+
+To test the application, run:
+
+```execute-2
+curl -s localhost:8080/catalog/items | jq .
+```
+
+The output should be:
+
+```
+[
+  {
+    "id": "6b76148d-0fda-4ebf-8966-d91bfaeb0236",
+    "img": "https://images.unsplash.com/photo-1590688178590-bb8370b70528",
+    "name": "Breakfast with homemade bread",
+    "price": 16
+  },
+  {
+    "id": "52d59380-79da-49d5-9d09-9716e20ccbc4",
+    "img": "https://images.unsplash.com/photo-1592894869086-f828b161e90a",
+    "name": "Brisket",
+    "price": 24
+  },
+  {
+    "id": "a7be01f8-b76e-4384-bf1d-e69d7bdbe4b4",
+    "img": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "name": "Pork Ribs",
+    "price": 20
+  }
+]
+```
+
+Stop the port-forwarding.
+```execute-1
+<ctrl+c>
+```

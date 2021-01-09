@@ -1,0 +1,55 @@
+In order to be able to deploy the application to Kubernetes, we need to create a container image which bundles up the application.
+
+To create the container image, we are going to use the Maven `spring-boot:build-image` command. This will build us a container image without needing to worry about a `Dockerfile`.
+
+```execute
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName={{ registry_host }}/springguides/shop
+```
+
+To test that the container image works run:
+
+```execute
+docker run --rm -p 8080:8080 {{ registry_host }}/springguides/shop
+```
+
+You should see the startup messages for the Spring Boot application.
+
+```
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.4.1)
+
+2021-01-09 20:45:08.156  INFO [,,] 1 --- [           main] com.example.demo.shop.ShopApplication    : Starting ShopApplication v0.0.1-SNAPSHOT using Java 11.0.9.1 on 6e0128120000 with PID 1 (/workspace/BOOT-INF/classes started by cnb in /workspace)
+2021-01-09 20:45:08.162  INFO [,,] 1 --- [           main] com.example.demo.shop.ShopApplication    : No active profile set, falling back to default profiles: default
+2021-01-09 20:45:09.962  INFO [,,] 1 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=b33eeb0b-1b87-394c-9c4b-ea0090016ce4
+2021-01-09 20:45:10.889  INFO [,,] 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-01-09 20:45:10.904  INFO [,,] 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-01-09 20:45:10.905  INFO [,,] 1 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-01-09 20:45:11.007  INFO [,,] 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-01-09 20:45:11.007  INFO [,,] 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2724 ms
+2021-01-09 20:45:12.167  INFO [,,] 1 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-09 20:45:12.872  INFO [,,] 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2021-01-09 20:45:13.007  INFO [,,] 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-01-09 20:45:13.043  INFO [,,] 1 --- [           main] com.example.demo.shop.ShopApplication    : Started ShopApplication in 5.69 seconds (JVM running for 6.277)
+```
+
+To test the application, run:
+
+```execute-2
+curl localhost:8080/actuator/health
+```
+
+The output should be:
+
+```
+{"status":"UP"}
+```
+
+Kill the application once more.
+```execute-1
+<ctrl+c>
+```

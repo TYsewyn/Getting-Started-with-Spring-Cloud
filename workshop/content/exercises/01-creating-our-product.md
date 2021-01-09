@@ -34,6 +34,8 @@ Next, check if you can build the application.
 ./mvnw clean verify
 ```
 
+> NOTE: It can take a couple of minutes the first time, but once the dependencies are all cached, subsequent builds would be faster.
+
 You should see the following output.
 
 ```
