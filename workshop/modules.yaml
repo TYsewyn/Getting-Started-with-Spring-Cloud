@@ -11,4 +11,6 @@ modules:
     name: Defining Our API
   exercises/03-setting-up-our-api-tests:
     name: Setting Up Our API Tests
+  exercises/04-implementing-our-api:
+    name: Implementing Our API
     exit_sign: Finish Workshop
