@@ -28,7 +28,7 @@ Next, update the configuration of the `spring-cloud-contract-maven-plugin` plugi
 file: ~/demo/shop/pom.xml
 match: <testFramework>JUNIT5</testFramework>
 text: |
-    <baseClassForTests>com.example.demo.shop.BaseTestClass</baseClassForTests>
+                        <baseClassForTests>com.example.demo.shop.BaseTestClass</baseClassForTests>
 ```
 
 And rerun the build.
@@ -85,7 +85,6 @@ text: |
                 ],
             ])
             bodyMatchers {
-                jsonPath('$', byType { minOccurrence(1) })
                 jsonPath('$[*].id', byRegex(uuid()))
                 jsonPath('$[*].name', byRegex("[a-zA-Z \\-]+"))
                 jsonPath('$[*].img', byRegex(url()))
@@ -144,17 +143,17 @@ After re-running your build, you should see an output similar to the following.
 
 ```
 [ERROR] Failures: 
-[ERROR]   ContractsTest.validate_getAllShopItems:30 
+[ERROR]   ContractVerifierTest.validate_getCatalogItems:30 
 Expecting:
  <404>
 to be equal to:
  <200>
 but was not.
-[ERROR]   ContractsTest.validate_placeOrder:48 
+[ERROR]   ContractVerifierTest.validate_placeOrder:57 
 Expecting:
  <404>
 to be equal to:
- <200>
+ <201>
 but was not.
 [INFO] 
 [ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
