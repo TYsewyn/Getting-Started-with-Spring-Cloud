@@ -5,3 +5,5 @@ modules:
         - workshop-overview
         - setup-environment
         - exercises/01-creating-our-product
+        - exercises/02-defining-our-api
+        - exercises/03-setting-up-our-api-tests

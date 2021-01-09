@@ -6,5 +6,9 @@ modules:
     name: Setup Environment
     exit_sign: Start Workshop
   exercises/01-creating-our-product:
-    name: Creating our Product
+    name: Creating Our Product
+  exercises/02-defining-our-api:
+    name: Defining Our API
+  exercises/03-setting-up-our-api-tests:
+    name: Setting Up Our API Tests
     exit_sign: Finish Workshop

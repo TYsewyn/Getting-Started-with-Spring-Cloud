@@ -1,0 +1,161 @@
+Because we defined our API first, we can easily set up some tests to verify that our implementation will be correct so that we do not break the interaction between the web application and the backing service.
+To do this we will make use of our first Spring Cloud project: Spring Cloud Contract.
+This project will convert the contracts we will later add to the project into generated tests.
+
+First, we will need to make a base class, which will be used as the parent class for our generated tests.
+
+```editor:append-lines-to-file
+file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
+text: |
+    package com.example.demo.shop;
+
+    import org.junit.jupiter.api.BeforeEach;
+
+    import io.restassured.module.mockmvc.RestAssuredMockMvc;
+
+    public class BaseTestClass {
+
+        @BeforeEach
+        public void setup() {
+            RestAssuredMockMvc.standaloneSetup();
+        }
+    }
+```
+
+Next, update the configuration of the `spring-cloud-contract-maven-plugin` plugin in your `pom.xml` file.
+
+```editor:append-lines-after-match
+file: ~/demo/shop/pom.xml
+match: <testFramework>JUNIT5</testFramework>
+text: |
+    <baseClassForTests>com.example.demo.shop.BaseTestClass</baseClassForTests>
+```
+
+And rerun the build.
+
+```execute
+./mvnw clean verify
+```
+
+After re-running your build, you should see that the build is still successful.
+That is because we did not add the contracts the our application yet.
+To help you out we already defined the contracts below.
+The only thing you need to do is to execute the following 2 commands.
+
+Because defining and creating contracts with Spring Cloud Contract is a workshop on its own we will not go into detail here.
+
+```editor:append-lines-to-file
+file: ~/demo/shop/src/test/resources/contracts/getCatalogItems.groovy
+text: |
+    package contracts
+
+    import org.springframework.cloud.contract.spec.Contract
+
+    Contract.make {
+        request {
+            method 'GET'
+            url '/catalog/items'
+            headers {
+                accept('application/json')
+            }
+        }
+        response {
+            status OK()
+            headers {
+                contentType('application/json')
+            }
+            body([
+                [
+                    "id": "6b76148d-0fda-4ebf-8966-d91bfaeb0236",
+                    "name": "Breakfast with homemade bread",
+                    "img": "https://images.unsplash.com/photo-1590688178590-bb8370b70528",
+                    "price": 16,
+                ],
+                [
+                    "id": "52d59380-79da-49d5-9d09-9716e20ccbc4",
+                    "name": "Brisket",
+                    "img": "https://images.unsplash.com/photo-1592894869086-f828b161e90a",
+                    "price": 24,
+                ],
+                [
+                    "id": "a7be01f8-b76e-4384-bf1d-e69d7bdbe4b4",
+                    "name": "Pork Ribs",
+                    "img": "https://images.unsplash.com/photo-1544025162-d76694265947",
+                    "price": 20,
+                ],
+            ])
+            bodyMatchers {
+                jsonPath('$', byType { minOccurrence(1) })
+                jsonPath('$[*].id', byRegex(uuid()))
+                jsonPath('$[*].name', byRegex("[a-zA-Z \\-]+"))
+                jsonPath('$[*].img', byRegex(url()))
+                jsonPath('$[*].price', byRegex(positiveInt()))
+            }
+        }
+    }
+```
+
+```editor:append-lines-to-file
+file: ~/demo/shop/src/test/resources/contracts/placeOrder.groovy
+text: |
+    package contracts
+
+    import org.springframework.cloud.contract.spec.Contract
+
+    Contract.make {
+        request {
+            method 'POST'
+            url '/orders'
+            headers {
+                contentType('application/json')
+            }
+            body(
+                "name": $(consumer(regex('[^0-9\\_\\!\\¡\\?\\÷\\?\\¿\\/\\+\\=\\@\\#\$\\%\\ˆ\\&\\*\\(\\)\\{\\}\\|\\~\\<\\>\\;\\:\\[\\]]{2,}')), producer('Jane Doe')),
+                "items": [
+                    [
+                        "id": "6b76148d-0fda-4ebf-8966-d91bfaeb0236",
+                        "amount": 1
+                    ],
+                ],
+            )
+            bodyMatchers {
+                jsonPath('$.items', byType { minOccurrence(1) })
+                jsonPath('$.items[0].id', byRegex(uuid()))
+                jsonPath('$.items[0].amount', byRegex(positiveInt()))
+            }
+        }
+        response {
+            status CREATED()
+            headers {
+                header('Location', $(consumer('/orders/9bb544af-3df5-476b-bff9-17984e8e5e0a'),
+                    producer(regex('\\/orders\\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}'))))
+            }
+        }
+    }
+```
+
+When you added the contracts, rerun your build once again.
+
+```execute
+./mvnw clean verify
+```
+
+After re-running your build, you should see an output similar to the following.
+
+```
+[ERROR] Failures: 
+[ERROR]   ContractsTest.validate_getAllShopItems:30 
+Expecting:
+ <404>
+to be equal to:
+ <200>
+but was not.
+[ERROR]   ContractsTest.validate_placeOrder:48 
+Expecting:
+ <404>
+to be equal to:
+ <200>
+but was not.
+[INFO] 
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+```

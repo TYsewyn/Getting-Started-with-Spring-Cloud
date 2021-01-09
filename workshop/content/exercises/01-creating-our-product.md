@@ -27,3 +27,17 @@ To verify that the application code has been generated successfully, open up the
 ```editor:open-file
 file: ~/demo/shop/src/main/java/com/example/demo/shop/ShopApplication.java
 ```
+
+Next, check if you can build the application.
+
+```execute
+./mvnw clean verify
+```
+
+You should see the following output.
+
+```
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+```
