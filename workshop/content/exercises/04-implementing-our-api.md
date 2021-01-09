@@ -2,9 +2,9 @@ Now we are sure that we are verifying our API it is time to fix our failing test
 As a first iteration we will create a `CatalogController` and `OrdersController` which will react and respond to the requests our generated test will execute.
 
 ```editor:append-lines-to-file
-file: ~/demo/shop/src/main/java/com/example/demo/shop/catalog/CatalogController.java
+file: ~/demo/shop/src/main/java/com/example/demo/shop/CatalogController.java
 text: |
-    package com.example.demo.shop.catalog;
+    package com.example.demo.shop;
 
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
@@ -29,9 +29,9 @@ text: |
 ```
 
 ```editor:append-lines-to-file
-file: ~/demo/shop/src/main/java/com/example/demo/shop/orders/OrdersController.java
+file: ~/demo/shop/src/main/java/com/example/demo/shop/OrdersController.java
 text: |
-    package com.example.demo.shop.orders;
+    package com.example.demo.shop;
 
     import java.net.URI;
     import java.util.UUID;
@@ -61,17 +61,17 @@ text: |
 
 Before we run our tests we need to update the `BaseTestClass` so that both `RestController`s have been included in our setup.
 
-```editor:open-file
+```editor:select-matching-text
 file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
-line: 11
+text: "RestAssuredMockMvc.standaloneSetup();"
+before: 0
+after: 0
 ```
 
-Replace line 11 with the following statement:
+Replace the highlighted line with the following statement:
 ```java
 RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
 ```
-
-Make sure to not forget to add the import statements for both `CatalogController` and `OrdersController`.
 
 Next, run the build again.
 
