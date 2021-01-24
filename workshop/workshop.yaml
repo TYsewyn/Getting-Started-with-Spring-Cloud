@@ -8,6 +8,6 @@ modules:
         - exercises/02-defining-our-api
         - exercises/03-setting-up-our-api-tests
         - exercises/04-implementing-our-api
-        - exercises/05-deploying-our-shop
+        - exercises/05-building-our-shop
         - exercises/06-containerizing-our-shop
         - exercises/07-deploying-our-shop
