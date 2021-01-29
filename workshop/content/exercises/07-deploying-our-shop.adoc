@@ -36,7 +36,7 @@ The output should be:
 deployment.apps/shop created
 ....
 
-> NOTE: The deployment will use the `default` service account, which already has the image pull secret for the image registry associated with it, so we did not need to provide the pull secret in the deployment.
+NOTE: The deployment will use the `default` service account, which already has the image pull secret for the image registry associated with it, so we did not need to provide the pull secret in the deployment.
 
 To monitor the deployment, run:
 
