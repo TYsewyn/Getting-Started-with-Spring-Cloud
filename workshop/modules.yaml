@@ -19,4 +19,13 @@ modules:
     name: Containerizing Our Shop
   exercises/07-deploying-our-shop:
     name: Deploying Our Shop
+    exit_sign: Using an API Gateway
+  exercises/08-using-an-api-gateway:
+    name: Using an API Gateway
+  exercises/09-creating-our-api-gateway:
+    name: Creating Our API Gateway
+  exercises/10-defining-our-routes:
+    name: Defining Our Routes
+  exercises/11-deploying-our-api-gateway:
+    name: Deploying Our API Gateway
     exit_sign: Finish Workshop

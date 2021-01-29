@@ -1,0 +1,67 @@
+Now that we have our gateway application ready it is time to configure our routes.
+A route consists out of a predicate, potentially one or more filters, and a URI where our traffic will be routed to.
+
+We will route all traffic that uses the `/catalog` and `/orders` paths to our shop application which is accessible using the DNS of the Kubernetes service, `http://my-shop.default.svc.cluster.local`.
+
+NOTE: Remember that this DNS entry is only available to containers running inside your cluster.
+
+We can configure our routes either by using Java configuration, or by using an `application.yaml` file.
+
+====
+[source,java,indent=0,subs="verbatim,attributes",role="primary"]
+.Java
+=====
+[source,role=editor:append-lines-to-file]
+----
+file: ~/demo/gateway/src/main/java/com/example/demo/gateway/GatewayConfiguration.groovy
+text: |
+package com.example.demo.gateway;
+
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class GatewayConfiguration {
+
+	@Bean
+	public RouteLocator routes(RouteLocatorBuilder builder) {
+		return builder.routes()
+			.route("catalog_route",
+				r -> r.path("/catalog/{*segment}")
+				.uri("http://my-shop.default.svc.cluster.local")
+			)
+			.route("orders_route",
+				r -> r.path("/orders/{*segment}")
+				.uri("http://my-shop.default.svc.cluster.local")
+			)
+		.build();
+	}
+
+}
+----
+=====
+
+[source,yaml,indent=0,subs="verbatim,attributes",role="secondary"]
+.Yaml
+=====
+[source,role=editor:append-lines-to-file]
+----
+file: ~/demo/gateway/src/main/resources/application.yaml
+text: |
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: catalog_route
+        uri: http://my-shop.default.svc.cluster.local
+        predicates:
+        - Path=/catalog/{*segment}
+      - id: orders_route
+        uri: http://my-shop.default.svc.cluster.local
+        predicates:
+        - Path=/orders/{*segment}
+----
+=====
+====

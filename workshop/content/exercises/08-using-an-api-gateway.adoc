@@ -1,0 +1,8 @@
+Using this port forwarding trick we can easily access the running application.
+However, the moment we want to add another functionality as a separate application we will not be able to use one IP address or DNS entry for two separate applications, or two Kubernetes services in this example.
+In terms of functionality you could opt for a default Kubernetes `Ingress` which would allow you to route your traffic based on a (sub)path you want to access.
+Unfortunately, the default Kubernetes `Ingress` doesn't support things like authentication, fail-over, rate limiting, and others.
+
+This is where our next Spring Cloud project comes in: `Spring Cloud Gateway`.
+
+Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, observability, and resiliency.

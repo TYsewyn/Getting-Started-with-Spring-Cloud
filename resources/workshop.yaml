@@ -12,6 +12,11 @@ spec:
     image: jdk11-environment:*
     files: github.com/TYsewyn/Getting-Started-with-Spring-Cloud
   session:
+    ingresses:
+      - name: gateway
+        protocol: http
+        host: my-gateway.$(session_namespace).svc.cluster.local
+        port: 80
     namespaces:
       budget: large
     resources:

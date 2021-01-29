@@ -1,0 +1,28 @@
+Just like with our shop application we will need to create an image, push the image to our local registry and deploy our application onto our Kubernetes cluster.
+Since we already went over this before, you can use the following commands:
+
+[source,bash,role=terminal:execute]
+----
+command: |
+  ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName={{ registry_host }}/springguides/gateway
+  docker push {{ registry_host }}/springguides/gateway
+  kubectl create deployment gateway --port=8080 --image={{ registry_host }}/springguides/gateway
+  kubectl expose deployment gateway --name my-gateway --port 80 --target-port 8080
+----
+
+Because we already went ahead and made the gateway accessible from outside the cluster you should not use the port forwarding trick anymore.
+Execute the next command to check if our `orders` route is working as expected.
+
+[source,bash,role=terminal:execute]
+----
+command: curl -sSL -D - -X POST -H "Content-Type: application/json" {{ session_namespace }}-gateway.{{ ingress_domain }}/orders
+----
+
+You should an output similar to:
+
+....
+HTTP/1.1 201
+Location: /orders/72d9e083-4f25-452e-af31-ed6c9b401c3c
+Content-Length: 0
+Date: Fri, 29 Jan 2021 18:50:54 GMT
+....

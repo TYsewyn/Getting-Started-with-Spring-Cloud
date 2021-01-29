@@ -67,12 +67,12 @@ replicaset.apps/shop-67948799b4   1         1         1       1m
 ....
 
 To test that the deployment is working, we need to be able to connect to the application.
-Normally you would have created a service for the application, as well as exposed it outside of the cluster using an ingress or via a load balancer.
+Normally you would have exposed the application outside of the cluster using an ingress or via a load balancer.
 Since we haven't done that, we will set up port forwarding to expose the application to the local environment.
 
 [source,bash,role=terminal:execute]
 ----
-command: kubectl port-forward deployment/shop 8080:8080
+command: kubectl port-forward service/my-shop 8080:80
 ----
 
 To test the application, run:

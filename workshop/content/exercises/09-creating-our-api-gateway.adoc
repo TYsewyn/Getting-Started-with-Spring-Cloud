@@ -1,0 +1,40 @@
+First, we need to create a new Spring Boot application.
+For this we are going to use the Spring Initializr again.
+
+Run the command:
+
+[source,bash,role=terminal:execute]
+----
+command: rm -rf ~/demo/gateway && mkdir -p ~/demo/gateway && cd ~/demo/gateway && (curl -sSL https://start.spring.io/starter.tgz -d groupId=com.example.demo -d artifactId=gateway -d name=gateway -d description=Getting%20started%20with%20Spring%20Cloud%20-%20Gateway -d packageName=com.example.demo.gateway -d dependencies=actuator,cloud-gateway,cloud-starter-sleuth -d javaVersion=11 | tar -xzf - && rm src/main/resources/application.properties)
+----
+
+You can see the result by running:
+
+
+[source,bash,role=terminal:execute]
+----
+command: tree .
+----
+
+To verify that the application code has been generated successfully, open up the main Java source code file for the application.
+
+[source,role=editor:open-file]
+----
+file: ~/demo/gateway/src/main/java/com/example/demo/gateway/GatewayApplication.java
+----
+
+Next, check if you can build the application.
+
+
+[source,bash,role=terminal:execute]
+----
+command: ./mvnw clean verify
+----
+
+You should see the following output.
+
+....
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+....
