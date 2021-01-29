@@ -11,3 +11,7 @@ modules:
         - exercises/05-building-our-shop
         - exercises/06-containerizing-our-shop
         - exercises/07-deploying-our-shop
+        - exercises/08-using-an-api-gateway
+        - exercises/09-creating-our-api-gateway
+        - exercises/10-defining-our-routes
+        - exercises/11-deploying-our-api-gateway
