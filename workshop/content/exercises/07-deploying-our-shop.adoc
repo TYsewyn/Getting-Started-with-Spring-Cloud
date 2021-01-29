@@ -28,7 +28,7 @@ To deploy our container image, now run:
 
 [source,bash,role=terminal:execute]
 ----
-command: kubectl create deployment shop --image={{ registry_host }}/springguides/shop
+command: kubectl create deployment shop --port=8080 --image={{ registry_host }}/springguides/shop
 ----
 
 The output should be:
