@@ -3,7 +3,7 @@ We will first do this direct into the local directory.
 
 [source,bash,role=terminal:execute]
 ----
-command: ./mvnw install
+command: ./mvnw package
 ----
 
 When the build has completed, build artefacts including the application JAR file, can be found in the `target` sub directory.
