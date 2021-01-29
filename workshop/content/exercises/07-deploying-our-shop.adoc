@@ -56,14 +56,17 @@ command: kubectl get all
 
 The output should be similar to:
 ....
-NAME                        READY   STATUS        RESTARTS   AGE
-pod/shop-67948799b4-kxp7w   1/1     Running       0          1m
+NAME                        READY   STATUS    RESTARTS   AGE
+pod/shop-79495ff6fb-4kkbw   1/1     Running   0          7s
+
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+service/my-shop   ClusterIP   10.97.204.69   <none>        80/TCP    7s
 
 NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/shop   1/1     1            1           1m
+deployment.apps/shop   1/1     1            1           8s
 
 NAME                              DESIRED   CURRENT   READY   AGE
-replicaset.apps/shop-67948799b4   1         1         1       1m
+replicaset.apps/shop-79495ff6fb   1         1         1       8s
 ....
 
 To test that the deployment is working, we need to be able to connect to the application.
