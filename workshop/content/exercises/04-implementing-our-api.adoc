@@ -61,7 +61,15 @@ text: |
     }
 ----
 
-Before we run our tests we need to update the `BaseTestClass` so that both `RestController`s have been included in our setup.
+Before we run our tests we need to update the `BaseTestClass` so that both `RestController` s have been included in our setup.
+First copy following line of code:
+
+[source,role=workshop:copy]
+----
+text: RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
+----
+
+And replace the selected code with the code you previously copied:
 
 [source,role=editor:select-matching-text]
 ----
@@ -69,16 +77,9 @@ file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
 text: "RestAssuredMockMvc.standaloneSetup();"
 ----
 
-Replace the highlighted line with the following statement:
-
-[source,role=workshop:copy]
-----
-text: RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
-----
-
 Next, run the build again.
 
-[source,role=editor:select-matching-text]
+[source,bash,role=terminal:execute]
 ----
 command: ./mvnw clean verify
 ----
