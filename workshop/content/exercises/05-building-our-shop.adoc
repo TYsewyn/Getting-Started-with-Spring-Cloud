@@ -10,7 +10,7 @@ When the build has completed, build artefacts including the application JAR file
 
 [source,bash,role=terminal:execute]
 ----
-command: tree target
+command: tree -L 1 target
 ----
 
 To test that the application works, run Java with the application JAR file:
