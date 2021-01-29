@@ -13,7 +13,7 @@ We can configure our routes either by using Java configuration, or by using an `
 =====
 [source,role=editor:append-lines-to-file]
 ----
-file: ~/demo/gateway/src/main/java/com/example/demo/gateway/GatewayConfiguration.groovy
+file: ~/demo/gateway/src/main/java/com/example/demo/gateway/GatewayConfiguration.java
 text: |
 package com.example.demo.gateway;
 
@@ -30,11 +30,11 @@ public class GatewayConfiguration {
 		return builder.routes()
 			.route("catalog_route",
 				r -> r.path("/catalog/{*segment}")
-				.uri("http://my-shop.default.svc.cluster.local")
+				.uri("http://my-shop.{{ session_namespace }}.svc.cluster.local")
 			)
 			.route("orders_route",
 				r -> r.path("/orders/{*segment}")
-				.uri("http://my-shop.default.svc.cluster.local")
+				.uri("http://my-shop.{{ session_namespace }}.svc.cluster.local")
 			)
 		.build();
 	}
@@ -55,11 +55,11 @@ spring:
     gateway:
       routes:
       - id: catalog_route
-        uri: http://my-shop.default.svc.cluster.local
+        uri: http://my-shop.{{ session_namespace }}.svc.cluster.local
         predicates:
         - Path=/catalog/{*segment}
       - id: orders_route
-        uri: http://my-shop.default.svc.cluster.local
+        uri: http://my-shop.{{ session_namespace }}.svc.cluster.local
         predicates:
         - Path=/orders/{*segment}
 ----
