@@ -47,7 +47,7 @@ The only thing you need to do is to execute the following 2 commands.
 
 Because defining and creating contracts with Spring Cloud Contract is a workshop on its own we will not go into detail here.
 
-[source,role=editor:append-lines-after-match]
+[source,role=editor:append-lines-to-file]
 ----
 file: ~/demo/shop/src/test/resources/contracts/getCatalogItems.groovy
 text: |
@@ -98,7 +98,7 @@ text: |
     }
 ----
 
-[source,role=editor:append-lines-after-match]
+[source,role=editor:append-lines-to-file]
 ----
 file: ~/demo/shop/src/test/resources/contracts/placeOrder.groovy
 text: |
