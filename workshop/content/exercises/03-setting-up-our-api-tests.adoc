@@ -4,7 +4,8 @@ This project will convert the contracts we will later add to the project into ge
 
 First, we will need to make a base class, which will be used as the parent class for our generated tests.
 
-```editor:append-lines-to-file
+[source,role=editor:append-lines-to-file]
+----
 file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
 text: |
     package com.example.demo.shop;
@@ -20,22 +21,24 @@ text: |
             RestAssuredMockMvc.standaloneSetup();
         }
     }
-```
+----
 
 Next, update the configuration of the `spring-cloud-contract-maven-plugin` plugin in your `pom.xml` file.
 
-```editor:append-lines-after-match
+[source,role=editor:append-lines-after-match]
+----
 file: ~/demo/shop/pom.xml
 match: <testFramework>JUNIT5</testFramework>
 text: |
                         <baseClassForTests>com.example.demo.shop.BaseTestClass</baseClassForTests>
-```
+----
 
 And rerun the build.
 
-```execute
-./mvnw clean verify
-```
+[source,bash,role=terminal:execute]
+----
+command: ./mvnw clean verify
+----
 
 After re-running your build, you should see that the build is still successful.
 That is because we did not add the contracts the our application yet.
@@ -44,7 +47,8 @@ The only thing you need to do is to execute the following 2 commands.
 
 Because defining and creating contracts with Spring Cloud Contract is a workshop on its own we will not go into detail here.
 
-```editor:append-lines-to-file
+[source,role=editor:append-lines-after-match]
+----
 file: ~/demo/shop/src/test/resources/contracts/getCatalogItems.groovy
 text: |
     package contracts
@@ -92,9 +96,10 @@ text: |
             }
         }
     }
-```
+----
 
-```editor:append-lines-to-file
+[source,role=editor:append-lines-after-match]
+----
 file: ~/demo/shop/src/test/resources/contracts/placeOrder.groovy
 text: |
     package contracts
@@ -131,17 +136,18 @@ text: |
             }
         }
     }
-```
+----
 
 When you added the contracts, rerun your build once again.
 
-```execute
-./mvnw clean verify
-```
+[source,bash,role=terminal:execute]
+----
+command: ./mvnw clean verify
+----
 
 After re-running your build, you should see an output similar to the following.
 
-```
+....
 [ERROR] Failures: 
 [ERROR]   ContractVerifierTest.validate_getCatalogItems:30 
 Expecting:
@@ -157,4 +163,4 @@ to be equal to:
 but was not.
 [INFO] 
 [ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
-```
+....

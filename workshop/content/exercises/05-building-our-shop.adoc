@@ -1,32 +1,37 @@
-We are now ready to build the application source code. We will first do this direct into the local directory.
+We are now ready to build the application source code.
+We will first do this direct into the local directory.
 
-```execute
-./mvnw install
-```
+[source,bash,role=terminal:execute]
+----
+command: ./mvnw install
+----
 
 When the build has completed, build artefacts including the application JAR file, can be found in the `target` sub directory.
 
-```execute
-tree target
-```
+[source,bash,role=terminal:execute]
+----
+command: tree target
+----
 
 To test that the application works, run Java with the application JAR file:
 
-```execute
-java -jar target/shop-0.0.1-SNAPSHOT.jar
-```
+[source,bash,role=terminal:execute]
+----
+command: java -jar target/shop-0.0.1-SNAPSHOT.jar
+----
 
 Because we added the `actuator` module as a dependency, a number of HTTP endpoints already exist.
 
 To test the application and see what endpoints were added, run:
 
-```execute-2
-curl -s localhost:8080/actuator | jq .
-```
+[source,bash,role=terminal:execute]
+----
+session: 2
+command: curl -s localhost:8080/actuator | jq .
+----
 
 The output should be similar to the following:
-
-```
+....
 {
   "_links": {
     "self": {
@@ -47,10 +52,12 @@ The output should be similar to the following:
     }
   }
 }
-```
+....
 
 We no longer need the local instance of the application, so you can kill it:
 
-```execute-1
-<ctrl+c>
-```
+[source,bash,role=terminal:execute]
+----
+session: 1
+command: <ctrl+c>
+----

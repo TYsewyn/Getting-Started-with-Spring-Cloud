@@ -2,19 +2,21 @@ In order to be able to deploy the application to Kubernetes, we need to create a
 
 To create the container image, we are going to use the Maven `spring-boot:build-image` command. This will build us a container image without needing to worry about a `Dockerfile`.
 
-```execute
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName={{ registry_host }}/springguides/shop
-```
+[source,bash,role=terminal:execute]
+----
+command: ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName={{ registry_host }}/springguides/shop
+----
 
 To test that the container image works run:
 
-```execute
-docker run --rm -p 8080:8080 {{ registry_host }}/springguides/shop
-```
+[source,bash,role=terminal:execute]
+----
+command: docker run --rm -p 8080:8080 {{ registry_host }}/springguides/shop
+----
 
 You should see the startup messages for the Spring Boot application.
 
-```
+....
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -35,21 +37,24 @@ You should see the startup messages for the Spring Boot application.
 2021-01-09 20:45:12.872  INFO [,,] 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
 2021-01-09 20:45:13.007  INFO [,,] 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 2021-01-09 20:45:13.043  INFO [,,] 1 --- [           main] com.example.demo.shop.ShopApplication    : Started ShopApplication in 5.69 seconds (JVM running for 6.277)
-```
+....
 
 To test the application, run:
 
-```execute-2
-curl localhost:8080/actuator/health
-```
+[source,bash,role=terminal:execute]
+----
+session: 2
+command: curl localhost:8080/actuator/health
+----
 
 The output should be:
-
-```
+....
 {"status":"UP"}
-```
+....
 
 Kill the application once more.
-```execute-1
-<ctrl+c>
-```
+[source,bash,role=terminal:execute]
+----
+session: 1
+command: <ctrl+c>
+----

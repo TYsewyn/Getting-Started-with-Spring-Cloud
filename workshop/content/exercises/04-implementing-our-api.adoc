@@ -1,7 +1,8 @@
 Now we are sure that we are verifying our API it is time to fix our failing tests.
 As a first iteration we will create a `CatalogController` and `OrdersController` which will react and respond to the requests our generated test will execute.
 
-```editor:append-lines-to-file
+[source,role=editor:append-lines-to-file]
+----
 file: ~/demo/shop/src/main/java/com/example/demo/shop/CatalogController.java
 text: |
     package com.example.demo.shop;
@@ -26,9 +27,10 @@ text: |
         }
         
     }
-```
+----
 
-```editor:append-lines-to-file
+[source,role=editor:append-lines-to-file]
+----
 file: ~/demo/shop/src/main/java/com/example/demo/shop/OrdersController.java
 text: |
     package com.example.demo.shop;
@@ -57,30 +59,34 @@ text: |
         }
         
     }
-```
+----
 
 Before we run our tests we need to update the `BaseTestClass` so that both `RestController`s have been included in our setup.
 
-```editor:select-matching-text
+[source,role=editor:select-matching-text]
+----
 file: ~/demo/shop/src/test/java/com/example/demo/shop/BaseTestClass.java
 text: "RestAssuredMockMvc.standaloneSetup();"
-```
+----
 
 Replace the highlighted line with the following statement:
-```copy
-RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
-```
+
+[source,role=workshop:copy]
+----
+text: RestAssuredMockMvc.standaloneSetup(new CatalogController(), new OrdersController());
+----
 
 Next, run the build again.
 
-```execute
-./mvnw clean verify
-```
+[source,role=editor:select-matching-text]
+----
+command: ./mvnw clean verify
+----
 
 You should see that the API of our application is now behaving like we defined in the contracts.
 
-```
+....
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-```
+....
