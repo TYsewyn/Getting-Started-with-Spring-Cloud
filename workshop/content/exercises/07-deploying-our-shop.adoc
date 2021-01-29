@@ -24,11 +24,13 @@ Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCom
 Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.0", GitCommit:"af46c47ce925f4c4ad5cc8d1fca46c7b77d13b38", GitTreeState:"clean", BuildDate:"2020-12-08T17:51:19Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"}
 ....
 
-To deploy our container image, now run:
+To deploy and expose our container image, now run:
 
 [source,bash,role=terminal:execute]
 ----
-command: kubectl create deployment shop --port=8080 --image={{ registry_host }}/springguides/shop
+command: |
+  kubectl create deployment shop --port=8080 --image={{ registry_host }}/springguides/shop
+  kubectl expose deployment shop --name my-shop --port 80 --target-port 8080
 ----
 
 The output should be:
