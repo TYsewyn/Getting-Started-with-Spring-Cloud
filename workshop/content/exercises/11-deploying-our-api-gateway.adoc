@@ -15,7 +15,7 @@ Execute the next command to check if our `orders` route is working as expected.
 
 [source,bash,role=terminal:execute]
 ----
-command: curl -sSL -D - -X POST -H "Content-Type: application/json" {{ session_namespace }}-gateway.{{ ingress_domain }}/orders
+command: "curl -sSL -D - -X POST -H \"Content-Type: application/json\" {{ ingress_protocol }}://{{ session_namespace }}-gateway.{{ ingress_domain }}/orders"
 ----
 
 You should an output similar to:
