@@ -21,7 +21,7 @@ Run the command:
 
 [source,bash,role=terminal:execute]
 ----
-command: rm -rf ~/demo && mkdir -p ~/demo/shop && cd ~/demo/shop && (curl -sSL https://start.spring.io/starter.tgz -d groupId=com.example.demo -d artifactId=shop -d name=shop -d description=Getting%20started%20with%20Spring%20Cloud%20-%20Shop -d packageName=com.example.demo.shop -d dependencies=web,actuator,cloud-contract-verifier,cloud-starter-sleuth -d javaVersion=11 | tar -xzf -)
+command: rm -rf ~/demo/shop && mkdir -p ~/demo/shop && cd ~/demo/shop && (curl -sSL https://start.spring.io/starter.tgz -d groupId=com.example.demo -d artifactId=shop -d name=shop -d description=Getting%20started%20with%20Spring%20Cloud%20-%20Shop -d packageName=com.example.demo.shop -d dependencies=web,actuator,cloud-contract-verifier,cloud-starter-sleuth -d javaVersion=11 | tar -xzf -)
 ----
 
 You can see the result by running:

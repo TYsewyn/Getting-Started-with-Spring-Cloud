@@ -1,14 +1,14 @@
 Now that we have our gateway application ready it is time to configure our routes.
 A route consists out of a predicate, potentially one or more filters, and a URI where our traffic will be routed to.
 
-We will route all traffic that uses the `/catalog` and `/orders` paths to our shop application which is accessible using the DNS of the Kubernetes service, `http://my-shop.default.svc.cluster.local`.
+We will route all traffic that uses the `/catalog` and `/orders` paths to our shop application which is accessible using the DNS of the Kubernetes service, `http://my-shop.{{ session_namespace }}.svc.cluster.local`.
 
 NOTE: Remember that this DNS entry is only available to containers running inside your cluster.
 
 We can configure our routes either by using Java configuration, or by using an `application.yaml` file.
 
 ====
-[source,java,indent=0,subs="verbatim,attributes",role="primary"]
+[source,role="primary"]
 .Java
 =====
 [source,role=editor:append-lines-to-file]
@@ -43,7 +43,7 @@ public class GatewayConfiguration {
 ----
 =====
 
-[source,yaml,indent=0,subs="verbatim,attributes",role="secondary"]
+[source,role="secondary"]
 .Yaml
 =====
 [source,role=editor:append-lines-to-file]
